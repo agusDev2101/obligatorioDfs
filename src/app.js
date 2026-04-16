@@ -1,10 +1,13 @@
 import express from "express"
-import rutasGenerales from "./api/v1/routes/index.js"
-import dotenv from "dotenv";
-import { connectMongo } from "./api/v1/config/mongo.config.js";
-import { errorMiddleware } from "./api/v1/middleware/error.middleware.js";
-import { connectRedis } from "./api/v1/config/redis.config.js";
-dotenv.config();
+import rutasGenerales from "./server/v1/routes/index.js"
+
+// import dotenv from "dotenv";
+// dotenv.config();
+
+import { connectMongo } from "./server/v1/config/mongo.config.js";
+import { errorMiddleware } from "./server/v1/middleware/error.middleware.js";
+import { connectRedis } from "./server/v1/config/redis.config.js";
+
 
 
 // connectMongo
@@ -24,5 +27,6 @@ console.log("paso las rutas");
 app.use(errorMiddleware);
 
 
-const puerto = process.env.PORT || 3001;
-app.listen(puerto, () => console.log('Escuchando en puerto:', puerto)); 
+export default app
+
+
