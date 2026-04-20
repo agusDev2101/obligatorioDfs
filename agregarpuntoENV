@@ -1,4 +1,4 @@
 PORT = 3000
+MONGO_URI = mongodb + srv://user_dfs:PYf9SrBrEDvB4947@todocluster.0t2xeav.mongodb.net/?appName=TodoCluster
 REDIS_URL = redis://default:HS6fL4k3xKgd6syGHM2uhfqvfReIzIwH@redis-12626.crce296.us-east-1-6.ec2.cloud.redislabs.com:12626
 JWT_SECRET = misuperClave
-MONGO_URI = mongodb + srv://estesilva033_db_user:esteban123@cluster0.lmihaqr.mongodb.net/clasepractica6?retryWrites=true&w=majority

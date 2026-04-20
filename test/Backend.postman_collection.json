@@ -142,12 +142,25 @@
 			"item": [
 				{
 					"name": "Register",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const random = Math.floor(Math.random() * 100000);",
+									"pm.collectionVariables.set(\"lastName\", `${random}Simpsons`);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \n        \"username\": \"lisa2\",\n            \"firstName\": \"Lisa\",\n                \"lastName\": \"Simpsons\",\n                    \"email\": \"lisa2@gmail.com\",\n                        \"password\": \"lisa\"\n}",
+							"raw": "{ \n        \"username\": \"{{$randomUserName}}\",\n        \"firstName\": \"Lisa\",\n        \"lastName\": \"{{lastName}}\",\n        \"email\": \"{{$randomEmail}}\",\n        \"password\": \"lisa\"\n} ",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -166,8 +179,35 @@
 							"script": {
 								"exec": [
 									"const response = pm.response.json();",
+									"",
+									"",
+									"",
+									"pm.test(\"Body matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"token\");",
+									"});",
+									"",
+									"pm.test(\"Your test token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).exist;",
+									"});",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.eql(200);",
+									"});",
+									" ",
 									"// guardar token en variable de entorno",
-									"pm.environment.set(\"token\", response.token);"
+									"pm.collectionVariables.set(\"token\", response.token);",
+									"",
+									"",
+									"postman.setNextRequest(\"Get All Users\");",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -179,7 +219,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"lisa@gmail.com\",\n    \"password\":\"lisa\"\n}",
+							"raw": "{\n    \"emailOUsername\":\"lisa2@gmail.com\",\n    \"password\":\"lisa\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -196,11 +236,478 @@
 			"name": "Users",
 			"item": [
 				{
-					"name": "Get All",
+					"name": "Login Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"",
+									"",
+									"pm.test(\"Body matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"token\");",
+									"});",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"pm.test(\"Your test token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).exist;",
+									"});",
+									"",
+									"",
+									"",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.eql(200);",
+									"});",
+									" ",
+									"// guardar token en variable de entorno",
+									"pm.collectionVariables.set(\"token\", response.token);",
+									"",
+									"",
+									"// postman.setNextRequest(\"Get All Users\");",
+									"",
+									"",
+									"",
+									"",
+									" ",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"emailOUsername\":\"augustine_considine@yahoo.com\",\n    \"password\":\"lisa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL_BASE}}/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
 						"method": "GET",
 						"header": [],
 						"url": "{{URL_BASE}}/users"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Prueba Creacion Todo",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"",
+									"",
+									"pm.test(\"Body matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"token\");",
+									"});",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"pm.test(\"Your test token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).exist;",
+									"});",
+									"",
+									"",
+									"",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.eql(200);",
+									"});",
+									" ",
+									"// guardar token en variable de entorno",
+									"pm.collectionVariables.set(\"token\", response.token);",
+									"",
+									"",
+									"// postman.setNextRequest(\"Get All Users\");",
+									"",
+									"",
+									"",
+									"",
+									" ",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"emailOUsername\":\"Bartholome48\",\n    \"password\":\"lisa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL_BASE}}/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Create todo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"HOLA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL_BASE}}/todos"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Prueba obtener todas las tareas",
+			"item": [
+				{
+					"name": "Login Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"",
+									"",
+									"pm.test(\"Body matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"token\");",
+									"});",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"pm.test(\"Your test token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).exist;",
+									"});",
+									"",
+									"",
+									"",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.eql(200);",
+									"});",
+									" ",
+									"// guardar token en variable de entorno",
+									"pm.collectionVariables.set(\"token\", response.token);",
+									"",
+									"",
+									"// postman.setNextRequest(\"Get All Users\");",
+									"",
+									"",
+									"",
+									"",
+									" ",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"emailOUsername\":\"Bartholome48\",\n    \"password\":\"lisa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL_BASE}}/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Todos Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{URL_BASE}}/todos"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Prueba obtener usuario paginados",
+			"item": [
+				{
+					"name": "Login Copy 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"",
+									"",
+									"pm.test(\"Body matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"token\");",
+									"});",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"pm.test(\"Your test token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).exist;",
+									"});",
+									"",
+									"",
+									"",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.eql(200);",
+									"});",
+									" ",
+									"// guardar token en variable de entorno",
+									"pm.collectionVariables.set(\"token\", response.token);",
+									"",
+									"",
+									"// postman.setNextRequest(\"Get All Users\");",
+									"",
+									"",
+									"",
+									"",
+									" ",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"emailOUsername\":\"Bartholome48\",\n    \"password\":\"lisa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL_BASE}}/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL_BASE}}/users?page=3&limit=5",
+							"host": [
+								"{{URL_BASE}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "3"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						}
 					},
 					"response": []
 				}
@@ -231,12 +738,12 @@
 	],
 	"variable": [
 		{
-			"key": "URL_DEV",
-			"value": "http://localhost:3000",
+			"key": "URL_PROD",
+			"value": "https://taras-back-26.vercel.app",
 			"type": "string"
 		},
 		{
-			"key": "URL_PROD",
+			"key": "URL_DEV",
 			"value": "http://localhost:3000",
 			"type": "string"
 		},
@@ -260,6 +767,10 @@
 		{
 			"key": "token",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imxpc2EiLCJmaXJzTmFtZSI6Ikxpc2EiLCJsYXN0TmFtZSI6IlNpbXBzb25zIiwiZW1haWwiOiJsaXNhQGdtYWlsLmNvbSIsImlkIjoyLCJpYXQiOjE3NzQ1NjkwOTIsImV4cCI6MTc3NDU3MjY5Mn0.pQHIXVVYBsOfS5nryDCsH5HSLbpNc4QPYF9psr8UVAQ"
+		},
+		{
+			"key": "lastName",
+			"value": ""
 		}
 	]
 }

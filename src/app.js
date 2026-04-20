@@ -7,6 +7,7 @@ import rutasGenerales from "./server/v1/routes/index.js"
 import { connectMongo } from "./server/v1/config/mongo.config.js";
 import { errorMiddleware } from "./server/v1/middleware/error.middleware.js";
 import { connectRedis } from "./server/v1/config/redis.config.js";
+import { rutaNoEncontradaMiddleware } from "./server/v1/middleware/ruta-no-encontrada.Middleware.js";
 
 
 
@@ -22,7 +23,10 @@ app.use(express.json());
 app.use(rutasGenerales)
 
 //rutas por defecto error 404 ruta no encontrada
-console.log("paso las rutas");
+app.use(rutaNoEncontradaMiddleware);
+
+
+
 //middleware de validacion de errores
 app.use(errorMiddleware);
 

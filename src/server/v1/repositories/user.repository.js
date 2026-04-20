@@ -5,6 +5,21 @@ const userRepository = {
         const usuarios = await User.find();
         return usuarios;
     },
+
+
+    getAllPaginated: async (page, limit) => {
+        const skip = (page - 1) * limit;
+        const usuarios = await User.find().skip(skip).limit(limit);
+        return usuarios;
+    },
+
+    // user?page=2&limit=10
+
+    // const  {page, limit} = req.query 
+
+
+
+
     //en data suponemos viene el email
     findByEmail: async (data) => {
         const usuario = await User.findOne({ email: data });

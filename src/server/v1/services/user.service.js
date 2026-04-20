@@ -35,6 +35,13 @@ export const getAllUser = async () => {
 }
 
 
+export const getAllUserPagined = async (page, limit) => {
+    const usuarios = await userRepository.getAllPaginated(page, limit);
+    return usuarios;
+}
+
+
+
 export const createUser = async (data) => {
 
     const { email } = data;

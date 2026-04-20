@@ -6,9 +6,13 @@ import * as userService from "../services/user.service.js";
 
 
 
-export const getAllController = async (req, res, next) => {
+export const getAllUserController = async (req, res, next) => {
     try {
-        const usuarios = await userService.getAllUser();
+
+        const { page, limit } = req.query;
+        const paginas = page || 1;
+        const limite = limit || 10;
+        const usuarios = await userService.getAllUserPagined(paginas, limite);
         console.log('usuarios', usuarios)
         res.status(200).json({ usuarios })
     } catch (error) {
@@ -19,7 +23,7 @@ export const getAllController = async (req, res, next) => {
 
 
 
-export const createController = async (req, res, next) => {
+export const createUserController = async (req, res, next) => {
     try {
         const { body } = req;
         const usuario = await userService.createUser(body);
