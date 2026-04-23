@@ -10,10 +10,6 @@ export const registerController = async (req, res, next) => {
     }
 }
 
-
-
-
-
 export const loginController = async (req, res, next) => {
     try {
         const { body } = req;

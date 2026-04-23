@@ -10,7 +10,7 @@ const v1AuthRoutes = Router();
 
 v1AuthRoutes.post("/register", validateBodyCreate, registerController); //esto es publico
 
-v1AuthRoutes.post("/login", loginController); //esto es publico
+v1AuthRoutes.post("/login", validateBodyLogin, loginController); //esto es publico
 
 export default v1AuthRoutes;
 
