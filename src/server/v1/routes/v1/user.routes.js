@@ -5,10 +5,12 @@ import {
     createUserController,
     updateUserController,
     deleteUserController
-} from "../../controllers/v1/user.controller.js";
+} from "../../controllers/user.controller.js";
+import { authMiddleware } from "../../middleware/auth.middleware.js";
 
 const usersRoutes = Router();
 
+usersRoutes.use(authMiddleware)
 // GET /api/v1/users
 usersRoutes.get("/", getUsersController);
 

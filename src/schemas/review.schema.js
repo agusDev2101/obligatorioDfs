@@ -20,6 +20,5 @@ export const patchReviewSchema = Joi.object({
   movieTitle: Joi.string().min(3),
   rating: Joi.number().min(1).max(5),
   comment: Joi.string().max(200),
-  categoryId: Joi.string().hex().length(24),
-  imageUrl: Joi.string().uri(),
-}).min(1);
+  categoryId: Joi.string().hex().length(24)
+});

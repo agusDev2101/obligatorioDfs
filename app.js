@@ -1,7 +1,7 @@
 import express from "express";
-import routes from "./src/routes/index.js";
-import { errorMiddleware } from "./src/middlewares/error.middleware.js";
-import { rutaNoEncontradaMiddleware } from "./src/middlewares/not-found.middleware.js";
+import routes from "./src/server/v1/routes/index.js";
+import { errorMiddleware } from "./src/server/v1/middleware/error.middleware.js";
+import { rutaNoEncontradaMiddleware } from "./src/server/v1/middleware/not-found.middleware.js";
 
 const app = express();
 
