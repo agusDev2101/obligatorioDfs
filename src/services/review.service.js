@@ -1,4 +1,4 @@
-import reviewRepository from "../repositories/review.repository.js";
+import reviewRepository from "../server/v1/repositories/review.repository.js";
 
 export const createReview = async (data) => {
     const review = await reviewRepository.create(data);
@@ -17,5 +17,15 @@ export const findReviewById = async (id) => {
 
 export const deleteReview = async (id) => {
     const review = await reviewRepository.delete(id);
+    return review;
+}
+
+export const putReview = async (id, data) => {
+    const review = await reviewRepository.put(id, data);
+    return review;
+}
+
+export const patchReview = async (id, data) => {
+    const review = await reviewRepository.patch(id, data);
     return review;
 }

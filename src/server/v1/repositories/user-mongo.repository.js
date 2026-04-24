@@ -1,4 +1,4 @@
-import { UsuarioModel } from "../../models/users/users.model.mongo.js";
+import { UsuarioModel } from "../../server/v1/models/mongo/users.model.mongo.js";
 
 const mapToDomain = (user) => {
   if (!user) return null;

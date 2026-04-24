@@ -19,6 +19,14 @@ const reviewRepository = {
     delete: async (data) => {
         const review = await Review.findByIdAndDelete(data);
         return review;
+    },
+    put: async (id, data) => {
+        const review = await Review.findOneAndReplace({ _id: id }, data, { new: true, runValidators: true });
+        return review;
+    },
+    patch: async (id, data) => {
+        const review = await Review.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+        return review;
     }
 }
 

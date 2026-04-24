@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
-import userRepository from "../repository/users/user.repository.js";
+import userRepository from "../repositories/user.repository.js";
+import jwt from "jsonwebtoken";
 
 export const registerUser = async (user) => {
   const { email, username, password, role } = user;
@@ -30,3 +31,33 @@ export const registerUser = async (user) => {
 
   return await userRepository.create(userToCreate);
 };
+
+export const loginUser = async ({ email, password }) => {
+  const user = await userRepository.findAuthUserByEmail(email);
+  if (!user) {
+    const error = new Error("Credenciales inválidas");
+    error.status = 401;
+    throw error;
+  }
+
+  const passwordMatches = await bcrypt.compare(password, user.password);
+  if (!passwordMatches) {
+    const error = new Error("Credenciales inválidas");
+    error.status = 401;
+    throw error;
+  }
+
+  const token = jwt.sign({
+    id: user.id,
+    email: user.email,
+    username: user.username,
+    role: user.role,
+  },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
+
+  const { password: _, ...safeUser } = user;
+
+  return { token, user: safeUser };
+}

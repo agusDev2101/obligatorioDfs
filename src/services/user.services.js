@@ -1,4 +1,4 @@
-import userRepository from "../repository/users/user.repository.js";
+import userRepository from "../server/v1/repositories/user.repository.js";
 
 export const getUsers = async () => {
     return await userRepository.findAll();
