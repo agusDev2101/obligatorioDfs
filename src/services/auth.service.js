@@ -2,6 +2,20 @@ import bcrypt from "bcrypt";
 import userRepository from "../server/v1/repositories/user.repository.js";
 import jwt from "jsonwebtoken";
 
+const generateToken = (user) => {
+  return jwt.sign(
+    {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      role: user.role,
+      plan: user.plan,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" },
+  );
+};
+
 export const registerUser = async (user) => {
   const { email, username, password, role } = user;
 
@@ -29,11 +43,19 @@ export const registerUser = async (user) => {
     ...(role === "reviewer" ? { plan: "plus" } : { plan: null }),
   };
 
-  return await userRepository.create(userToCreate);
+  const createdUser = await userRepository.create(userToCreate);
+
+  const token = generateToken(createdUser);
+
+  return {
+    token,
+    user: createdUser,
+  };
 };
 
 export const loginUser = async ({ email, password }) => {
   const user = await userRepository.findAuthUserByEmail(email);
+
   if (!user) {
     const error = new Error("Credenciales inválidas");
     error.status = 401;
@@ -41,23 +63,19 @@ export const loginUser = async ({ email, password }) => {
   }
 
   const passwordMatches = await bcrypt.compare(password, user.password);
+
   if (!passwordMatches) {
     const error = new Error("Credenciales inválidas");
     error.status = 401;
     throw error;
   }
 
-  const token = jwt.sign({
-    id: user.id,
-    email: user.email,
-    username: user.username,
-    role: user.role,
-  },
-    process.env.JWT_SECRET,
-    { expiresIn: "1d" }
-  );
-
   const { password: _, ...safeUser } = user;
 
-  return { token, user: safeUser };
-}
+  const token = generateToken(safeUser);
+
+  return {
+    token,
+    user: safeUser,
+  };
+};
