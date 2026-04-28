@@ -3,8 +3,10 @@ import { authMiddleware } from "../../middleware/auth.middleware.js";
 import { createReviewController, deleteReviewByIdController, findReviewByIdController, getAllReviewsController, putReviewByIdController, patchReviewByIdController } from "../../controllers/review.controller.js";
 import { validateCreateReview, validatePutReview} from "../../middleware/review.validate.middleware.js";
 import { upload } from "../../middleware/upload.middleware.js";
+import { limiter } from "../../middleware/rateLimiter.middleware.js";
 
 const v1ReviewsRoutes = Router();
+
 v1ReviewsRoutes.use(authMiddleware);
 
 v1ReviewsRoutes.post("/", upload.single("image"), validateCreateReview, createReviewController);

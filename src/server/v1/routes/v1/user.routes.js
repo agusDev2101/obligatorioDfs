@@ -7,8 +7,10 @@ import {
     deleteUserController
 } from "../../controllers/user.controller.js";
 import { authMiddleware } from "../../middleware/auth.middleware.js";
+import { limiter } from "../../middleware/rateLimiter.middleware.js";
 
 const usersRoutes = Router();
+
 
 usersRoutes.use(authMiddleware)
 // GET /api/v1/users
