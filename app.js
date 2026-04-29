@@ -1,13 +1,14 @@
-import "dotenv/config";
 import express from "express";
-import routes from "./src/routes/index.js";
-import { connectMongo } from "./src/config/mongo.config.js";
+import routes from "./src/server/v1/routes/index.js";
+import { errorMiddleware } from "./src/server/v1/middleware/error.middleware.js";
+import { rutaNoEncontradaMiddleware } from "./src/server/v1/middleware/not-found.middleware.js";
 
 const app = express();
 
-await connectMongo();
-
 app.use(express.json());
-app.use("/api", routes);
+app.use(routes);
+
+app.use(rutaNoEncontradaMiddleware);
+app.use(errorMiddleware);
 
 export default app;
