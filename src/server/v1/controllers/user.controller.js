@@ -4,6 +4,7 @@ import {
   createUser,
   updateUser,
   deleteUser,
+  changeUserPlan,
 } from "../../../services/user.services.js";
 
 export const getUsersController = async (req, res) => {
@@ -89,5 +90,18 @@ export const deleteUserController = async (req, res) => {
       ok: false,
       message: error.message,
     });
+  }
+};
+
+export const changePlanController = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { plan } = req.body;
+
+    const updatedUser = await changeUserPlan(user, plan);
+
+    res.status(200).json({ user: updatedUser });
+  } catch (error) {
+    next(error);
   }
 };
