@@ -1,36 +1,107 @@
-//se puede importar cada metodo del servicio o importar todos y ponerle un alias
-// import { getAll } from "../services/user.service.js";
-// getAll();
+import {
+  getUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+  changeUserPlan,
+} from "../../../services/user.services.js";
 
-import * as userService from "../services/user.service.js";
+export const getUsersController = async (req, res) => {
+  try {
+    const users = await getUsers();
 
+    res.status(200).json({
+      ok: true,
+      data: users,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      message: error.message,
+    });
+  }
+};
 
+export const getUserByIdController = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-export const getAllUserController = async (req, res, next) => {
-    try {
+    const user = await getUserById(id);
 
-        const { page, limit } = req.query;
-        const paginas = page || 1;
-        const limite = limit || 10;
-        const usuarios = await userService.getAllUserPagined(paginas, limite);
-        console.log('usuarios', usuarios)
-        res.status(200).json({ usuarios })
-    } catch (error) {
-        next(error)
-    }
-}
+    res.status(200).json({
+      ok: true,
+      data: user,
+    });
+  } catch (error) {
+    res.status(404).json({
+      ok: false,
+      message: error.message,
+    });
+  }
+};
 
+export const createUserController = async (req, res) => {
+  try {
+    const newUser = await createUser(req.body);
 
+    res.status(201).json({
+      ok: true,
+      data: newUser,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      message: error.message,
+    });
+  }
+};
 
+export const updateUserController = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-export const createUserController = async (req, res, next) => {
-    try {
-        const { body } = req;
-        const usuario = await userService.createUser(body);
-        res.status(200).json({ usuario })
-    } catch (error) {
-        next(error)
-    }
-}
+    const updatedUser = await updateUser(id, req.body);
 
+    res.status(200).json({
+      ok: true,
+      data: updatedUser,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      message: error.message,
+    });
+  }
+};
 
+export const deleteUserController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedUser = await deleteUser(id);
+
+    res.status(200).json({
+      ok: true,
+      data: deletedUser,
+    });
+  } catch (error) {
+    res.status(404).json({
+      ok: false,
+      message: error.message,
+    });
+  }
+};
+
+export const changePlanController = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { plan } = req.body;
+
+    const updatedUser = await changeUserPlan(user, plan);
+
+    res.status(200).json({ user: updatedUser });
+  } catch (error) {
+    next(error);
+  }
+};

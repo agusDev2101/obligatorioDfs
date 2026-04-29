@@ -1,29 +1,37 @@
 import jwt from "jsonwebtoken";
 
 export const authMiddleware = (req, res, next) => {
-    //ir contra el request y obtener el header, authorization
+  try {
     const error = new Error("Error al autenticar");
     error.status = 401;
-    console.log('req', req)
-    const { headers } = req;
-    const auth = headers.authorization;
+
+    const auth = req.headers.authorization;
+
     if (!auth) {
-        next(error);
+      return next(error);
     }
+
     const elementos = auth.split(" ");
-    //vemos si viene el bearer
-    const vienenBearer = elementos[0] === "Bearer"
-    if (!vienenBearer) {
-        next(error);
+
+    const vieneBearer = elementos[0] === "Bearer";
+    if (!vieneBearer) {
+      return next(error);
     }
-    // vemos si viene el token
+
     const token = elementos[1];
+
     if (!token) {
-        next(error);
-    };
-    // validamos el token
+      return next(error);
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    //de lo decodificado se lo agregamos al req.user
+
     req.user = decoded;
+
     next();
-}
+  } catch (error) {
+    error.status = 401;
+    error.message = "Token inválido o expirado";
+    next(error);
+  }
+};

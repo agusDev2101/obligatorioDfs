@@ -1,19 +1,25 @@
 import mongoose from "mongoose";
 
-const todoSchema = new mongoose.Schema({
-    title: { type: String, required: true, trim: true },
-    completed: { type: Boolean, required: true },
+const reviewSchema = new mongoose.Schema({
+    movieTitle: { type: String, required: true, trim: true },
+    rating: { type: Number, required: true, min: 1, max: 5 },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
+    },
+    comment: { type: String, required: false, trim: true },
+    categoryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+        required: false
     },
     imageUrl: { type: String, required: false }
 }, { timestamps: true })
 
 
 
-todoSchema.set('toJSON', {
+reviewSchema.set('toJSON', {
     //doc es el documento de mongoose y ret el elemento a devolver
     transform: (doc, ret) => {
         // renombrar _id → id
@@ -30,4 +36,4 @@ todoSchema.set('toJSON', {
 
 
 
-export const Todo = mongoose.model("Todo", todoSchema);
+export const Review = mongoose.model("Review", reviewSchema);

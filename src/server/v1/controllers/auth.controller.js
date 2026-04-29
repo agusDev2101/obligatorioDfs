@@ -1,25 +1,27 @@
-import { loginUser, registerUser } from "../services/auth.service.js";
+import { registerUser } from "../../../services/auth.service.js";
+import { loginUser } from "../../../services/auth.service.js";
 
 export const registerController = async (req, res, next) => {
-    try {
-        const { body } = req;
-        const usuario = await registerUser(body);
-        res.status(201).json({ usuario })
-    } catch (error) {
-        next(error)
-    }
-}
+  try {
+    const user = await registerUser(req.body);
 
-
-
-
+    res.status(201).json({
+      ok: true,
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const loginController = async (req, res, next) => {
-    try {
-        const { body } = req;
-        const token = await loginUser(body);
-        res.status(200).json({ token })
-    } catch (error) {
-        next(error)
-    }
-}
+  try {
+    const data = await loginUser(req.body);
+    res.status(200).json({
+      ok: true,
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

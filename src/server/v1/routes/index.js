@@ -1,18 +1,8 @@
 import { Router } from "express";
-import v1Routes from "./v1.routes.js";
+import v1Routes from "./v1/index.js";
 
-const rutasGenerales = Router();
+const router = Router();
 
-// rutasGenerales.get("/", (req, res) => {
-//     res.json({ message: "Bienvenido a la API de mi aplicación" });
-// }
+router.use("/v1", v1Routes);
 
-rutasGenerales.get("/", (req, res, next) => {
-    res.json({ message: "Bienvenido a la API de mi aplicación" });
-})
-
-
-rutasGenerales.use("/api/v1", v1Routes);
-
-
-export default rutasGenerales;
+export default router;

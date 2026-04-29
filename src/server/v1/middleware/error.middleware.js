@@ -1,9 +1,20 @@
 export const errorMiddleware = (err, req, res, next) => {
-    if (err) {
-        const status = err.status ?? 500;
-        const message = err.message ?? "Error sin mensaje";
-        return res.status(status).json({ message });
-    }
-    return res.status(500).json("Error desconocido");
+  if (err.isJoi) {
+    return res.status(err.status || 400).json({
+      ok: false,
+      message: err.publicMessage || "Datos inválidos",
+      errors:
+        err.errors ||
+        err.details?.map((detail) => ({
+          field: detail.path.join("."),
+          message: detail.message,
+        })) ||
+        [],
+    });
+  }
 
-}
+  return res.status(err.status || 500).json({
+    ok: false,
+    message: err.message || "Error interno del servidor",
+  });
+};
