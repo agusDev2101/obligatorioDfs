@@ -1,0 +1,1388 @@
+{
+  "info": {
+    "_postman_id": "GENERATED-ID-12345",
+    "name": "API Obligatorio DFS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "reviewId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "categoryId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"string\",\n  \"name\": \"string\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para registro exitoso (201)",
+                  "if (pm.response.code === 201) {",
+                  "    pm.test(\"Status code es 201 (Creado)\", function () { pm.response.to.have.status(201); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene ok=true y data\", function () { pm.expect(json).to.have.property('ok', true); pm.expect(json).to.have.property('data'); });",
+                  "    pm.collectionVariables.set('userId', json.data._id || '');",
+                  "}",
+                  "// Test para error de validación (400)",
+                  "if (pm.response.code === 400) {",
+                  "    pm.test(\"Status code es 400 (Error de validación)\", function () { pm.response.to.have.status(400); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene ok=false y mensaje\", function () { pm.expect(json).to.have.property('ok', false); pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 201,
+              "name": "Created",
+              "body": "{\n  \"ok\": true,\n  \"data\": { /* user object */ }\n}"
+            },
+            {
+              "code": 400,
+              "name": "Bad Request",
+              "body": "{\n  \"ok\": false,\n  \"message\": \"Validation error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"string\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para login exitoso (200)",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene ok=true y data con token\", function () { pm.expect(json).to.have.property('ok', true); pm.expect(json.data).to.have.property('token'); });",
+                  "    pm.collectionVariables.set('token', json.data.token);",
+                  "}",
+                  "// Test para error de validación (400)",
+                  "if (pm.response.code === 400) {",
+                  "    pm.test(\"Status code es 400 (Error de validación)\", function () { pm.response.to.have.status(400); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene ok=false y mensaje\", function () { pm.expect(json).to.have.property('ok', false); pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"ok\": true,\n  \"data\": { /* token, user info */ }\n}"
+            },
+            {
+              "code": 400,
+              "name": "Bad Request",
+              "body": "{\n  \"ok\": false,\n  \"message\": \"Validation error\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IA",
+      "item": [
+        {
+          "name": "Transform Text",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/ia/transform",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "ia", "transform"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para respuesta exitosa (200)",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene success=true y data\", function () { pm.expect(json).to.have.property('success', true); pm.expect(json).to.have.property('data'); });",
+                  "}",
+                  "// Test para error de validación (400)",
+                  "if (pm.response.code === 400) {",
+                  "    pm.test(\"Status code es 400 (Error de validación)\", function () { pm.response.to.have.status(400); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene success=false y mensaje\", function () { pm.expect(json).to.have.property('success', false); pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"success\": true,\n  \"data\": { /* resultado */ }\n}"
+            },
+            {
+              "code": 400,
+              "name": "Bad Request",
+              "body": "{\n  \"success\": false,\n  \"message\": \"El campo 'text' es requerido.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "IA Welcome",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/ia/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "ia"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para respuesta exitosa (200)",
+                  "pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Respuesta contiene mensaje de bienvenida\", function () { pm.expect(json).to.have.property('message'); });",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"message\": \"Bienvenido a la API de IA\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Get Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para obtener todos los usuarios (200)",
+                  "pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Respuesta contiene ok=true y data array\", function () { pm.expect(json).to.have.property('ok', true); pm.expect(json).to.have.property('data'); pm.expect(Array.isArray(json.data)).to.be.true; });",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"ok\": true,\n  \"data\": [ /* users */ ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get User By Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", ":id"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para obtener usuario por ID (200 y 404)",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene ok=true y data\", function () { pm.expect(json).to.have.property('ok', true); pm.expect(json).to.have.property('data'); });",
+                  "}",
+                  "if (pm.response.code === 404) {",
+                  "    pm.test(\"Status code es 404 (No encontrado)\", function () { pm.response.to.have.status(404); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene ok=false y mensaje\", function () { pm.expect(json).to.have.property('ok', false); pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"ok\": true,\n  \"data\": { /* user */ }\n}"
+            },
+            {
+              "code": 404,
+              "name": "Not Found",
+              "body": "{\n  \"ok\": false,\n  \"message\": \"User not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  /* campos a actualizar */\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", ":id"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para actualizar usuario (200 y 400)",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene ok=true y data\", function () { pm.expect(json).to.have.property('ok', true); pm.expect(json).to.have.property('data'); });",
+                  "}",
+                  "if (pm.response.code === 400) {",
+                  "    pm.test(\"Status code es 400 (Error de validación)\", function () { pm.response.to.have.status(400); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene ok=false y mensaje\", function () { pm.expect(json).to.have.property('ok', false); pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"ok\": true,\n  \"data\": { /* user */ }\n}"
+            },
+            {
+              "code": 400,
+              "name": "Bad Request",
+              "body": "{\n  \"ok\": false,\n  \"message\": \"Validation error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", ":id"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para eliminar usuario (200)",
+                  "pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Respuesta contiene ok=true y mensaje\", function () { pm.expect(json).to.have.property('ok', true); pm.expect(json).to.have.property('message'); });",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"ok\": true,\n  \"message\": \"User deleted\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Change Plan",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plan\": \"premium\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/plan",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "plan"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para cambio de plan (200)",
+                  "pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Respuesta contiene ok=true y data\", function () { pm.expect(json).to.have.property('ok', true); pm.expect(json).to.have.property('data'); });",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"ok\": true,\n  \"data\": { /* user */ }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Movie",
+      "item": [
+        {
+          "name": "Search Movies",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/movies/search?query=nombre",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "movies", "search"],
+              "query": [
+                { "key": "query", "value": "nombre" }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para búsqueda de películas (200 y 400)",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta es un array de películas\", function () { pm.expect(Array.isArray(json)).to.be.true; });",
+                  "}",
+                  "if (pm.response.code === 400) {",
+                  "    pm.test(\"Status code es 400 (Error de validación)\", function () { pm.response.to.have.status(400); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('error'); });",
+                  "}",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "[ /* movies */ ]"
+            },
+            {
+              "code": 400,
+              "name": "Bad Request",
+              "body": "{\n  \"error\": \"Falta el parámetro de búsqueda (query)\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Review",
+      "item": [
+        {
+          "name": "Create Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "multipart/form-data" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title", "value": "string", "type": "text" },
+                { "key": "content", "value": "string", "type": "text" },
+                { "key": "image", "type": "file" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reviews/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "reviews"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para crear review (201)",
+                  "pm.test(\"Status code es 201 (Creado)\", function () { pm.response.to.have.status(201); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Respuesta contiene review\", function () { pm.expect(json).to.have.property('review'); });",
+                  "if (json.review && json.review._id) pm.collectionVariables.set('reviewId', json.review._id);",
+                  "// Test para error de validación (400)",
+                  "if (pm.response.code === 400) {",
+                  "    pm.test(\"Status code es 400 (Error de validación)\", function () { pm.response.to.have.status(400); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 201,
+              "name": "Created",
+              "body": "{\n  \"review\": { /* review */ }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get All Reviews",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reviews/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "reviews"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para obtener todas las reviews (200)",
+                  "pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Respuesta contiene reviews array\", function () { pm.expect(json).to.have.property('reviews'); pm.expect(Array.isArray(json.reviews)).to.be.true; });",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"reviews\": [ /* reviews */ ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Review By Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reviews/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "reviews", ":id"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para obtener review por ID (200 y 404)",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene review\", function () { pm.expect(json).to.have.property('review'); });",
+                  "}",
+                  "if (pm.response.code === 404) {",
+                  "    pm.test(\"Status code es 404 (No encontrado)\", function () { pm.response.to.have.status(404); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    const json = pm.response.json();",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"review\": { /* review */ }\n}"
+            },
+            {
+              "code": 404,
+              "name": "Not Found",
+              "body": "{\n  \"message\": \"Review no encontrado\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Review",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reviews/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "reviews", ":id"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para eliminar review (200)",
+                  "pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Respuesta contiene mensaje de éxito\", function () { pm.expect(json).to.have.property('message'); });",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"message\": \"Review eliminada correctamente\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Review",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "multipart/form-data" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title", "value": "string", "type": "text" },
+                { "key": "content", "value": "string", "type": "text" },
+                { "key": "image", "type": "file" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reviews/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "reviews", ":id"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para actualizar review (200)",
+                  "pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Respuesta contiene review\", function () { pm.expect(json).to.have.property('review'); });",
+                  "// Test para error de validación (400)",
+                  "if (pm.response.code === 400) {",
+                  "    pm.test(\"Status code es 400 (Error de validación)\", function () { pm.response.to.have.status(400); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"review\": { /* review */ }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Patch Review",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "multipart/form-data" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title", "value": "string", "type": "text" },
+                { "key": "content", "value": "string", "type": "text" },
+                { "key": "image", "type": "file" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reviews/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "reviews", ":id"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para patch de review (200)",
+                  "pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Respuesta contiene review\", function () { pm.expect(json).to.have.property('review'); });",
+                  "// Test para error de validación (400)",
+                  "if (pm.response.code === 400) {",
+                  "    pm.test(\"Status code es 400 (Error de validación)\", function () { pm.response.to.have.status(400); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"review\": { /* review */ }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Category",
+      "item": [
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"string\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/categories/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "categories"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para crear categoría (201)",
+                  "pm.test(\"Status code es 201 (Creado)\", function () { pm.response.to.have.status(201); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Respuesta contiene category.id\", function () { pm.expect(json).to.have.nested.property('category.id'); });",
+                  "if (json.category && json.category.id) pm.collectionVariables.set('categoryId', json.category.id);",
+                  "// Test para error de validación (400)",
+                  "if (pm.response.code === 400) {",
+                  "    pm.test(\"Status code es 400 (Error de validación)\", function () { pm.response.to.have.status(400); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 201,
+              "name": "Created",
+              "body": "{\n  \"category\": { /* category */ }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/categories/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "categories"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para obtener todas las categorías (200)",
+                  "pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Respuesta contiene categories array\", function () { pm.expect(json).to.have.property('categories'); pm.expect(Array.isArray(json.categories)).to.be.true; });",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"categories\": [ /* categories */ ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Category By Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "categories", ":id"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para obtener categoría por ID (200)",
+                  "pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Respuesta contiene category\", function () { pm.expect(json).to.have.property('category'); });",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"category\": { /* category */ }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"string\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "categories", ":id"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para actualizar categoría (200)",
+                  "pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Respuesta contiene category\", function () { pm.expect(json).to.have.property('category'); });",
+                  "// Test para error de validación (400)",
+                  "if (pm.response.code === 400) {",
+                  "    pm.test(\"Status code es 400 (Error de validación)\", function () { pm.response.to.have.status(400); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"category\": { /* category */ }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Patch Category",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"string\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "categories", ":id"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para patch de categoría (200)",
+                  "pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Respuesta contiene category\", function () { pm.expect(json).to.have.property('category'); });",
+                  "// Test para error de validación (400)",
+                  "if (pm.response.code === 400) {",
+                  "    pm.test(\"Status code es 400 (Error de validación)\", function () { pm.response.to.have.status(400); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"category\": { /* category */ }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "categories", ":id"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test para eliminar categoría (200)",
+                  "pm.test(\"Status code es 200 (OK)\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Respuesta contiene mensaje de éxito\", function () { pm.expect(json).to.have.property('message'); });",
+                  "// Test para no autenticado (401)",
+                  "if (pm.response.code === 401) {",
+                  "    pm.test(\"Status code es 401 (No autenticado)\", function () { pm.response.to.have.status(401); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para no autorizado (403)",
+                  "if (pm.response.code === 403) {",
+                  "    pm.test(\"Status code es 403 (No autorizado)\", function () { pm.response.to.have.status(403); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}",
+                  "// Test para error interno (500)",
+                  "if (pm.response.code === 500) {",
+                  "    pm.test(\"Status code es 500 (Error interno del servidor)\", function () { pm.response.to.have.status(500); });",
+                  "    pm.test(\"Respuesta contiene mensaje de error\", function () { pm.expect(json).to.have.property('message'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": [
+            {
+              "code": 200,
+              "name": "OK",
+              "body": "{\n  \"message\": \"Categoría eliminada correctamente\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

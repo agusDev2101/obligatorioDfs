@@ -18,21 +18,15 @@ import { changePlanController } from "../../controllers/user.controller.js";
 
 const usersRoutes = Router();
 
-// --- INICIO BLOQUE TUYO ---
-usersRoutes.use(authMiddleware)
-// --- FIN BLOQUE TUYO ---
 
-// --- INICIO BLOQUE REMOTO ---
+// Proteger el resto de los endpoints
 usersRoutes.use(authMiddleware);
-// --- FIN BLOQUE REMOTO ---
+
 // GET /api/v1/users
 usersRoutes.get("/", getUsersController);
 
 // GET /api/v1/users/:id
 usersRoutes.get("/:id", getUserByIdController);
-
-// POST /api/v1/users
-usersRoutes.post("/", createUserController);
 
 // PUT /api/v1/users/:id
 usersRoutes.put("/:id", updateUserController);
@@ -40,9 +34,7 @@ usersRoutes.put("/:id", updateUserController);
 // DELETE /api/v1/users/:id
 usersRoutes.delete("/:id", deleteUserController);
 
-
-// --- INICIO BLOQUE REMOTO ---
+// PATCH /api/v1/users/plan
 usersRoutes.patch("/plan", changePlanController);
-// --- FIN BLOQUE REMOTO ---
 
 export default usersRoutes;
