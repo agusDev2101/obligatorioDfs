@@ -12,7 +12,7 @@ const reviewSchema = new mongoose.Schema({
     categoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",
-        required: false
+        required: true
     },
     imageUrl: { type: String, required: false }
 }, { timestamps: true })
