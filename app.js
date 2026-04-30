@@ -6,13 +6,9 @@ import { rutaNoEncontradaMiddleware } from "./src/server/v1/middleware/not-found
 const app = express();
 
 app.use(express.json());
+app.use(routes);
 
-app.use("/api", routes);
-
-// 404
 app.use(rutaNoEncontradaMiddleware);
-
-// errores
 app.use(errorMiddleware);
 
 export default app;
