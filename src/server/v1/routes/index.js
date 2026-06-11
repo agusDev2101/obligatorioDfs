@@ -4,6 +4,6 @@ import { limiter } from "../middleware/rateLimiter.middleware.js";
 
 const router = Router();
 
-router.use("/api/v1", v1Routes);
+router.use("/v1", v1Routes);
 
 export default router;
